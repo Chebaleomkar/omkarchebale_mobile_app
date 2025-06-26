@@ -20,4 +20,4 @@ export default function ClientProjectSection() {
             </ScrollView>
         </View>
     )
-}
+} 
