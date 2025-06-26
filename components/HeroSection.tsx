@@ -1,7 +1,8 @@
 import { Bio } from '@/data';
+import { openLink } from '@/utils/openLink';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useState } from 'react';
-import { Alert, Linking, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { SocialButton } from './SocialButton';
 
 export default function HeroSection() {
@@ -36,13 +37,7 @@ export default function HeroSection() {
     }, [displayedText, isDeleting, currentRoleIndex]);
 
 
-    const openLink = async (url: string) => {
-        try {
-            await Linking.openURL(url);
-        } catch  {
-            Alert.alert('Error', 'Could not open link');
-        }
-    };
+
     return (
         <View className="min-h-screen  px-8 py-16">
             <LinearGradient
