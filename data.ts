@@ -2,7 +2,7 @@
 export const Bio = {
     name: "Omkar Chebale ",
     roles: [
-        "Helping businesses go digital with smart, custom web solutions",
+        "Helping businesses go digital.",
         "You can call me Rushi",
         "Freelance Full-Stack Developer",
         "MERN Stack Specialist",

@@ -2,10 +2,15 @@ import { Bio } from '@/data';
 import { openLink } from '@/utils/openLink';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
+import Animated, {
+    Extrapolate,
+    interpolate,
+    useAnimatedStyle
+} from 'react-native-reanimated';
 import { SocialButton } from './SocialButton';
 
-export default function HeroSection() {
+export default function HeroSection({ scrollY }: { scrollY: any }) {
     const [displayedText, setDisplayedText] = useState('');
     const [isDeleting, setIsDeleting] = useState(false);
     const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
@@ -13,15 +18,15 @@ export default function HeroSection() {
     useEffect(() => {
         const currentRole = Bio.roles[currentRoleIndex];
 
-        const typeSpeed = isDeleting ? 500 : 700;
-        const deleteSpeed = 500;
+        const typeSpeed = isDeleting ? 100 : 80;
+        const deleteSpeed = 50;
 
         const timer = setTimeout(() => {
             if (!isDeleting) {
                 if (displayedText.length < currentRole.length) {
                     setDisplayedText(currentRole.slice(0, displayedText.length + 1));
                 } else {
-                    setTimeout(() => setIsDeleting(true), 2000);
+                    setTimeout(() => setIsDeleting(true), 200);
                 }
             } else {
                 if (displayedText.length > 0) {
@@ -37,6 +42,21 @@ export default function HeroSection() {
     }, [displayedText, isDeleting, currentRoleIndex]);
 
 
+    const avatarStyle = useAnimatedStyle(() => {
+        const scale = interpolate(scrollY.value, [0, 200], [1, 0.6], Extrapolate.CLAMP);
+        const translateY = interpolate(scrollY.value, [0, 100], [0, -30], Extrapolate.CLAMP);
+        return {
+            transform: [{ scale }, { translateY }],
+        };
+    });
+
+    const nameStyle = useAnimatedStyle(() => {
+        const scaleX = interpolate(scrollY.value, [0, 100], [1, 0.8], Extrapolate.CLAMP);
+        const translateY = interpolate(scrollY.value, [0, 100], [0, -10], Extrapolate.CLAMP);
+        return {
+            transform: [{ scaleX }, { translateY }],
+        };
+    });
 
     return (
         <View className="min-h-screen  px-8 py-16">
@@ -46,16 +66,27 @@ export default function HeroSection() {
             />
 
             <View className="flex-1 justify-center items-center">
-                <View className="w-56 h-56 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 items-center justify-center mb-12 border-4 border-white/20">
-                    <Text className="text-7xl font-black text-white">OC</Text>
-                </View>
+            
+                <Animated.View
+                    className="w-56 h-56 rounded-full items-center justify-center mb-4"
+                    style={avatarStyle}
+                >
+                    <Image
+                        source={{ uri: 'https://omkarchebale.vercel.app/profile.jpg' }}
+                        className="w-full h-full rounded-full border-4 border-blue-600"
+                        resizeMode="cover"
+                    />
+                </Animated.View>
 
-                <Text className="text-white text-5xl font-black text-center mb-6 tracking-wide">
+                <Animated.Text
+                    className="dark:text-white text-5xl font-black text-center mb-6 tracking-wide"
+                    style={nameStyle}
+                >
                     {Bio.name}
-                </Text>
+                </Animated.Text>
 
-                <View className="h-16 mb-8">
-                    <Text className="text-blue-400 text-2xl font-semibold text-center">
+                <View className="h-16 mb-8 ">
+                    <Text className="text-blue-500 text-2xl font-semibold text-center">
                         {displayedText}
                         <Text className="animate-pulse">|</Text>
                     </Text>
